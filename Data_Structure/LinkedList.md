@@ -257,10 +257,147 @@ In the last node of a list, the link field often contains a null reference, a sp
 In the case of a circular doubly linked list, the first node also points to the last node of the list.
 
 ```java
+// Node class
+public class Node {
+  T val;
+  Node<T> next;
+  
+  public Node(T val) {
+    this.val = val;
+  }
+}
 
+public class CircularLinkedList<T> {
+  private Node<T> head;
+  private int size;
+  
+  public CircularLinkedList() {
+    size = 0;
+  }
+  
+  public void insertBeginning(T val) {
+    Node<T> element = new Node<T>(val);
+    if (head == null) {
+      head = element;
+    } else {
+      Node<T> tmp = head;
+      element.next = tmp;
+      head = element;
+    }
+    size ++;
+  }
+  
+  public void insertAfter(T val) {
+    Node<T> element = new Node<T>(val);
+    if (head == null) {
+      head = element;
+    } else {
+      Node<T> tmp = head;
+      while (tmp != head) {
+        tmp = tmp.next;
+      }
+      tmp.next = element;
+    }
+    size ++;
+  }
+  
+  public void insertAtPosition(T val, int position) {
+    if (position < 0 || position > size) {
+      throw new IllegalArgumentException("Invalid position");
+    }
+    Node<T> element = new Node<T>(val);
+    Node<T> tmp = head;
+    Node<T> prev = null;
+    for (int i = 0; i < position; i ++) {
+      if (tmp.next == head) {
+        break;
+      }
+      prev = tmp;
+      tmp = tmp.next;
+    }
+    prev.next = element;
+    element.next = tmp;
+    size ++;
+  }
+  
+  public void deleteFromBeginning() {
+    Node<T> tmp = head;
+    while (tmp.next != head) {
+      tmp = tmp.next;
+    }
+    tmp.next = head.next;
+    head = head.next;
+    size --;
+  }
+  
+  public void deleteFromPosition(int position) {
+    if (position < 0 || position >= size) {
+      throw new IllegalArgumentExcetpion("Invalid position");
+    }
+    Node<T> curr = head;
+    Node<T> prev = head;
+    for (int i = 0; i < position; i ++) {
+      if (curr.next == head) break;
+      prev = curr;
+      curr = curr.next;
+    }
+    if (potition == 0) {
+      deleteFromBeginning();
+    } else {
+      prev.next = curr.next;
+    }
+    size --;
+  }
+  
+  public Node<T> searchByPosition(int position) {
+    if (position < 0 || position > size) {
+      throw new IllegalArgumentExcetipion("Invalid position");
+    }
+    Node<T> tmp = head;
+   	for (int i = 0; i < position; i ++) {
+      tmp = tmp.next;
+    }
+    return tmp;
+  }
+  
+  public Node<T> searchByValue(T val) {
+    Node<T> tmp = head;
+    while (tmp != null && tmp.val != val) {
+      tmp = tmp.next;
+    }
+    if (tmp.val == val) {
+      return tmp;
+    }
+    return null;
+  }
+  
+  public int size() {
+    return size;
+  }
+  
+  public boolean isEmpty() {
+    return size == 0;
+  }
+}
 ```
 
+## Tradeoffs
 
+### Linked Lists vs. Dynamic arrays
+
+|                            | Linked List                                                  | Array       | Dynamic array         | Balanced tree  | Random access list | Hashed array tree     |
+| -------------------------- | ------------------------------------------------------------ | ----------- | --------------------- | -------------- | ------------------ | --------------------- |
+| indexing                   | $\theta(n)$                                                  | $\theta(1)$ | $\theta(1)$           | $\theta(logn)$ | $\theta(logn)$     | $\theta(1)$           |
+| insert/delete at beginning | $\theta(1)$                                                  | N/A         | $\theta(n)$           | $\theta(logn)$ | $\theta(1)$        | $\theta(n)$           |
+| Insert/delete at end       | $\theta(1)$ when last element is known;  $\theta(n)$ when last element is unknown; | N/A         | $\theta(1)$ amortized | $\theta(logn)$ | N/A                | $\theta(1)$ amortized |
+| insert/delete in middle    | search time + $\theta(1)$                                    | N/A         | $\theta(n)$           | $\theta(logn)$ | N/A                | $\theta(n)$           |
+| Wasted space (average)     | $\theta(n)$                                                  | 0           | $\theta(n)$           | $\theta(n)$    | $\theta(n)$        | $\theta(\sqrt{n})$    |
+
+
+
+>  A dynamic array is a data structure that allocates all element contiguously in memory, and keeps a count of the current number of elements. If the space reserved for the dynamic array is exceeded, it is reallocated and (possibly) copied, which is an expensive operation.
+
+Linked lists have several advantages over dynamic arrays. Insertion or deletion of an element at a specific point of a list, assuming that we have indexed a pointer to the node (before the one to be removed, or before the insertion point) already, is a **constant-time** operation (otherwise without this reference it is $$O(n)$$), whereas insertion in a dynamic array at random locations will require moving half of the elements on average, and all the elements in the worst case. While one can "delete" an element from an array in constant time by somehow marking its slot as "vacant", this causes fragmentation that impedes the performance of iteration.
 
 
 
