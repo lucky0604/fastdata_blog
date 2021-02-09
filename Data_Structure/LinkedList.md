@@ -381,6 +381,26 @@ public class CircularLinkedList<T> {
 }
 ```
 
+### Operations
+
+#### Reverse Linked List
+
+```java
+private void reverseLinkedList(ListNode head) {
+  if (head == null) return;
+  ListNode prev = null;
+  ListNode curr = head;
+  ListNode next = null;
+  // the end condition is that curr is null
+  while (curr != null) {
+    next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+}
+```
+
 ## Tradeoffs
 
 ### Linked Lists vs. Dynamic arrays
