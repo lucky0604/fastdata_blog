@@ -173,3 +173,19 @@ class MaxHeap:
       index = p
 ```
 
+## Comparison of theoretic bounds for variants
+
+Here are time complexities of various heap data structures. Function names assume a **max-heap**. For the meaning of "*O(f)*"and "$\Theta(f)$" see [Big O notation](https://en.wikipedia.org/wiki/Big_O_notation).
+
+| Operation        | find-max    | delete-max      | insert          | increase-key    | meld            |
+| ---------------- | ----------- | --------------- | --------------- | --------------- | --------------- |
+| Binary           | $\Theta(1)$ | $\Theta(log n)$ | $O(log n)$      | $O(log n)$      | $\Theta(n)$     |
+| Leftist          | $\Theta(1)$ | $\Theta(log n)$ | $\Theta(log n)$ | $O(log n)$      | $\Theta(log n)$ |
+| Binomial         | $\Theta(1)$ | $\Theta(log n)$ | $\Theta(1)$     | $\Theta(log n)$ | $O(log n)$      |
+| Fibonacci        | $\Theta(1)$ | $O(log n)$      | $\Theta(1)$     | $\Theta(1)$     | $\Theta(1)$     |
+| Pairing          | $\Theta(1)$ | $O(log n)$      | $\Theta(1)$     | $o(log n)$      | $\Theta(1)$     |
+| Brodal           | $\Theta(1)$ | $O(log n)$      | $\Theta(1)$     | $\Theta(1)$     | $\Theta(1)$     |
+| Rank-pairing     | $\Theta(1)$ | $O(log n)$      | $\Theta(1)$     | $\Theta(1)$     | $\Theta(1)$     |
+| Strict Fibonacci | $\Theta(1)$ | $O(log n)$      | $\Theta(1)$     | $\Theta(1)$     | $\Theta(1)$     |
+| 2-3 heap         | $O(log n)$  | $O(log n)$      | $O(log n)$      | $\Theta(1)$     | ?               |
+
