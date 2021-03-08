@@ -150,3 +150,77 @@ In general a node in a tree will not have pointers to its parents, but this info
 ### Digraphs
 
 If edges (to child nodes) are thought of as references, then a tree is a special case of a digraph, and the tree data structure can be generalized to represent directed graphs by removing the constraints that a node may have at most one parent, and that nocycles are allowed. Edges are still abstractly considered as pairs of nodes, however, the terms parent and child are usually replaced by different terminology (for example, source and target). Different implementation strategies exist: a digraph can be represented by the same local data structure as a tree (node with value and list of children), assuming that "list of children" is a list of references, or globally by such structures as adjacency lists.
+
+In graph theory, a tree is connected acyclic graph; unless stated otherwise, in graph theory trees and graphs are assumed undirected. There is no one-to-one correspondence between such trees and trees as data structure. We can take an arbitrary undirected tree, arbitrarily pick one of its vertices as the root, make all its edges directed by making them point away from the root node - producing an arborescence - and assign an order to all the nodes. The result corresponds to a tree data structure. Picking a different root or different ordering produces a different one.
+
+Given a node in a tree, its children define an ordered forest (the union of subtrees given by all the children, or quivalently taking the subtree given by the node itself and erasing the root). Just as subtrees are natural for recursion (as in a depth-first search), forests are natural for corecursion (as in a breadth-first search).
+
+Via mutual recursion, a forest can be defined as a list of trees (represented by root nodes), where a node (of a tree) consists of a value and a forest (its children):
+
+```
+f: [n[1], ..., n[k]]
+n: v f
+```
+
+## Data type versus data structure
+
+There is a distinction between a tree as an abstract data type and as a concrete data structure, analogous to the distinction between a list and a linked list.
+
+As a data type, a tree has a value and children, and the children are themselves trees; the value and children of the tree are interpreted as the value of the root node and the subtrees of the children of the root node. To allow finite trees, one must either allow the list of children to empty (in which case trees can be required to be non-empty, an "empty tree" instead being represented by a forest of zero trees), or allow trees to be empty, in which case the list of children can be of fixed size (branching factor, especially 2 or "binary"), if desired.
+
+As a data structure, a linked tree is a group of nodes, where each node has a value and a list of references to other nodes (its children). There is also the requirement that no two "downward" references point to the same node. In practice, nodes in a tree commonly include other data as well, such as next / previous references, referencesto their parent nodes, or nearly anything.
+
+Due to the use of references to trees in the linked tree data structure, trees are often discussed implicitly assuming that they are being represented by references to the root node, as this is often how they are actually implemented. For example, rather than an empty tree, one may have a null reference: a tree is always non-empty, but a reference to a tree may be null.
+
+### Recursive
+
+Recursively, as a data type a tree is defined as a value (of some data type, possibly empty), together with a list of trees (possibly an empty list), the subtrees of its children; symbolically:
+
+```
+t: v[t[1], ..., t[k]]
+```
+
+
+
+(A tree t consists of a value v and a list of other trees)
+
+More elegantly, via mutual recursion, of which a tree is one of the most basic examples, a tree can be defined in terms of forest (a list of trees), where a tree consists of a value and a forest (the subtrees of its children):
+
+```
+f: [t[1], ..., t[k]]
+t: v f
+```
+
+Note that this definition is in terms of values, and is appropriate in functional languages (it assumes referential transparency); different trees have no connections, as they are simply lists of values.
+
+As a data structure, a tree is defined as a node (the root), which itself consists of a value (of some data type, possibly empty), together with a list of references to other nodes (list possibly empty, references possibly null); symbolically:
+
+```
+n: v[&n[1], ..., &n[k]]
+```
+
+(A node n consists of a value v and a list of references to other nodes)
+
+This data structure defineds a directed graph, and for it to be a tree one must add a condition on its global structure (its topology), namely that at most one reference can point to any given node (a node has at most a single parent), and no node in the tree point to the root. In fact, every node (other than the root) must have exactly one parent, and the root must have no parents.
+
+Indeed, given a list of nodes, and for each node a list of references to its children, one cannot tell if this structure is a tree or not without analyzing its global structure and that it is in fact topologically a tree, as defined below.
+
+### Mathematical terminology
+
+Viewed as a whole, a tree data structure is an ordered tree, generally with values attached to each node. Concretely, it is (if required to be non-empty):
+
+- A rooted tree with "away from root" direction (a more narrow term is an "arborescence"), meaning:
+  - A directed graph,
+  - whose underlying undirected graph is a tree (any two vertices are connected by exactly one simple path),
+  - with a distinguished root (one vertex is designated as the root),
+  - which determines the direction on the edges (arrows point away from the root; given an edge, the node that the edge points from is called the parent and the node that the edge points to is called the child),
+
+Together with:
+
+- an ordering on the child nodes of a given node, and
+- a value (of some data type) at each node
+
+Often trees have a fixed (more properly, bounded) branching factor (outdegree), particularly always having two child nodes (possibly empty, hence at most two non-empty child nodes), hence a "binary tree".
+
+Allowing empty trees makes some definitions simpler, some more complicated: a rooted tree must be non-empty, hence if empty trees are allowed the above definition instead becomes "an empty tree or a rooted tree such that...". On the other hand, empty trees simplify defining fixed branching factor: with empty trees allowed, a binary tree is a tree such that every node has exactly two children, each of which is a tree (possibly empty). The complete sets of operations on the tree must include fork operation.
+
